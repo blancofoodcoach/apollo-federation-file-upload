@@ -1,0 +1,36 @@
+name: push
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.github/**'
+
+jobs:
+  build:
+    name: push
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Automated Version Bump'
+        uses: 'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          major-wording: 'major,Major,breaking,Breaking,BREAKING'
+          minor-wording: 'add,Add,new,adds,Adds,feat,Feat'
+          patch-wording: 'patch,fixes'
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+      - name: Install dependencies
+        run: yarn install
+      - name: Build package
+        run: yarn build
+      - name: Authenticate Github Package Registry
+        run: |
+          echo '//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}' > .npmrc
+          echo '@blancofoodcoach:registry=https://npm.pkg.github.com/blancofoodcoach' >> .npmrc
+      - name: Publish package
+        run: npm publish
