@@ -1,6 +1,6 @@
 {
   "name": "@blancofoodcoach/apollo-federation-upload",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "author": "Guilherme Iscaro (iscaro@profusion.mobi)",
